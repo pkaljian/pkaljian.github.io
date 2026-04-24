@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter Kaljian — Planning + Technology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1117;
+    --paper: #f5f2ec;
+    --accent: #2a5f4f;
+    --accent2: #c4501a;
+    --muted: #6b7280;
+    --rule: #d4cfc6;
+    --card-bg: #ffffff;
+    --gate-bg: #0f1117;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── EMPLOYER GATE ── */
+  #gate {
+    position: fixed; inset: 0;
+    background: var(--gate-bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+  }
+  #gate.out { opacity: 0; pointer-events: none; }
+
+  .gate-inner {
+    text-align: center;
+    max-width: 480px;
+    padding: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .gate-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .gate-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: #f5f2ec;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .gate-sub {
+    font-size: 0.9rem;
+    color: #8a8a8a;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .gate-label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    margin-bottom: 0.6rem;
+    text-align: left;
+  }
+
+  .gate-input {
+    width: 100%;
+    background: #1c1f2b;
+    border: 1px solid #2e3245;
+    border-radius: 4px;
+    color: #f5f2ec;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .gate-input:focus { border-color: var(--accent); }
+  .gate-input::placeholder { color: #4a4f60; }
+
+  .gate-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .gate-btn:hover { background: #1e4538; }
+  .gate-btn:active { transform: scale(0.99); }
+  .gate-btn:disabled { background: #2e3245; color: #555; cursor: not-allowed; }
+
+  .gate-note {
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 1rem;
+    font-weight: 300;
+  }
+
+  /* ── MAIN PORTFOLIO ── */
+  #portfolio {
+    opacity: 0;
+    transition: opacity 0.8s ease 0.3s;
+  }
+  #portfolio.visible { opacity: 1; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,242,236,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  .nav-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    padding: 7rem 2rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.08;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .hero-body {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #3a3a3a;
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  .hero-cta:hover { background: #1e4538; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* SECTION */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* PROJECT CARDS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  }
+
+  .card-accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
+  .card-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #eef5f2;
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+  }
+  .tag.orange { background: #fdf0ea; color: var(--accent2); }
+  .tag.gray { background: #f1f1f1; color: var(--muted); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.65;
+    flex: 1;
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  .card-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    transition: gap 0.2s;
+  }
+  .card-link:hover { gap: 0.7rem; }
+  .card-link svg { width: 14px; height: 14px; }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #3a3a3a;
+    font-weight: 300;
+  }
+  .about-body p + p { margin-top: 1rem; }
+
+  .about-sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .skill-group { }
+  .skill-group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .skill-chips {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .chip {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.75rem;
+    color: #333;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: #8a8a8a;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.82rem;
+    font-weight: 300;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer .footer-name {
+    font-family: 'DM Serif Display', serif;
+    color: #f5f2ec;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* VISITOR NOTICE */
+  .visitor-bar {
+    background: #eef5f2;
+    border-bottom: 1px solid #c8ddd5;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  #visitor-org { font-weight: 500; }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.5rem 3rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── EMPLOYER GATE ── -->
+<div id="gate">
+  <div class="gate-inner">
+    <p class="gate-eyebrow">Peter Kaljian · Portfolio</p>
+    <h1 class="gate-title">Welcome.<br>Please identify<br>your organization.</h1>
+    <p class="gate-sub">This helps Peter understand who is reviewing his work.</p>
+    <label class="gate-label" for="org-input">Organization / Company name</label>
+    <input
+      id="org-input"
+      class="gate-input"
+      type="text"
+      placeholder="e.g. City of Sebastopol, AECOM, Jacobs…"
+      autocomplete="organization"
+    >
+    <button class="gate-btn" id="gate-submit" disabled>View Portfolio →</button>
+    <p class="gate-note">No account required. This information is only used to help Peter track interest.</p>
+  </div>
+</div>
+
+<!-- ── PORTFOLIO ── -->
+<div id="portfolio">
+
+  <div class="visitor-bar" id="visitor-bar" style="display:none">
+    Viewing as: <span id="visitor-org"></span>
+  </div>
+
+  <nav>
+    <a href="#" class="nav-name">Peter Kaljian</a>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="mailto:PKaljian@gmail.com">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Planner · AICP Candidate · Sonoma County, CA</p>
+      <h1 class="hero-title">Planning at the<br>intersection of<br><em>code</em> and code.</h1>
+      <p class="hero-body">
+        I am a consulting planner with a focus on California land use, CEQA, Subdivision law, and multi-modal mobility connections. I also build digital tools that make complex regulatory frameworks accessible — to applicants, staff, and the public.
+      </p>
+      <a href="mailto:PKaljian@gmail.com" class="hero-cta">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+        Get in touch
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">6+</div>
+        <div class="stat-label">Public tools deployed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3+</div>
+        <div class="stat-label">Years in California municipal &amp; consulting planning practice</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4+</div>
+        <div class="stat-label">Municipalities served as consulting planner</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">AICP</div>
+        <div class="stat-label">Candidate in progress</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="projects">
+    <div class="section-header">
+      <h2 class="section-title">Tools &amp; Projects</h2>
+      <span class="section-count">06 ITEMS</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">GIS</span>
+            <span class="tag">Customer Service</span>
+            <span class="tag orange">Zoning</span>
+          </div>
+          <h3 class="card-title">Petaluma Zoning Lookup Tool</h3>
+          <p class="card-desc">
+            An interactive lookup tool that answers common zoning questions for residents and applicants, integrated with an ArcGIS Online map. Designed to reduce counter-level calls by providing clear definitions and spatial context without requiring planning staff intervention.
+          </p>
+          <a href="https://pkaljian.github.io/zoning-lookup-tool/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">Active Use</span>
+            <span class="tag orange">Lot Coverage</span>
+            <span class="tag">Hercules</span>
+          </div>
+          <h3 class="card-title">Hercules Lot Coverage Calculator</h3>
+          <p class="card-desc">
+            A calculator that helps applicants interpret the maximum lot coverage section of Hercules's zoning code — a notoriously complex provision. This tool is actively in use by the City of Hercules to support applicant self-service and reduce staff time spent on routine coverage calculations.
+          </p>
+          <a href="https://pkaljian.github.io/hercules-paving-calculator/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">CEQA</span>
+            <span class="tag orange">PSA</span>
+            <span class="tag">Timelines</span>
+          </div>
+          <h3 class="card-title">California PSA / CEQA Timeline Tool</h3>
+          <p class="card-desc">
+            An interactive timeline tool that maps the full permitting lifecycle under the California Permit Streamlining Act and CEQA. Clearly delineates which party — applicant or agency — is responsible at each stage, helping applicants understand their rights and obligations and reducing procedural disputes.
+          </p>
+          <a href="https://pkaljian.github.io/california-psa-timeline-tool/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag orange">SmartCode</span>
+            <span class="tag">Petaluma</span>
+            <span class="tag">Entitlement</span>
+          </div>
+          <h3 class="card-title">Petaluma Permitting Pathway Tool</h3>
+          <p class="card-desc">
+            An applicant-facing decision tree that guides users through Petaluma's permitting pathways under its SmartCode. Helps applicants determine whether their project is by-right, ministerially approved, or subject to discretionary review — reducing uncertainty at the earliest stage of the entitlement process.
+          </p>
+          <a href="https://pkaljian.github.io/Petaluma-Permitting-Pathway/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag gray">AI-Assisted</span>
+            <span class="tag">Staff Tool</span>
+            <span class="tag orange">Correspondence</span>
+          </div>
+          <h3 class="card-title">LetterGPT — Planning Letter Drafting Assistant</h3>
+          <p class="card-desc">
+            A staff-facing tool that accelerates planning letter drafting by gathering project-specific information through a structured interview, then assembling a professional prompt for use with any AI assistant. Multiple human review checkpoints ensure professional judgment and code interpretation remain in the planner's hands throughout the process.
+          </p>
+          <a href="https://pkaljian.github.io/LetterGPT/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">GIS / AGOL</span>
+            <span class="tag orange">EIR</span>
+            <span class="tag">300 MW BESS</span>
+          </div>
+          <h3 class="card-title">Borealis BESS Project Web App</h3>
+          <p class="card-desc">
+            A public stakeholder web application built in ArcGIS Online to support a complex 300 MW battery energy storage facility in unincorporated Sonoma County — a project requiring tribal coordination and a full Environmental Impact Report. The app helps stakeholders understand the project's spatial context, scope, and environmental setting, supporting informed public participation.
+          </p>
+          <a href="https://uwt-gis-geotech.maps.arcgis.com/apps/instant/basic/index.html?appid=d8b31efa5bcb416292f942e62678bfd7" target="_blank" class="card-link">
+            View app <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="about" style="background: var(--card-bg); max-width: 100%; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 4rem 2rem;">
+      <div class="section-header">
+        <h2 class="section-title">About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-body">
+          <p>
+            I am a Planner at M-Group, where I serve as Consulting Planner to the City of Petaluma and support additional municipal clients. My work spans day-to-day zoning administration, state housing law implementation, CEQA compliance, and discretionary project entitlement.
+          </p>
+          <p>
+            Prior to M-Group, I worked at Permit Sonoma (Sonoma County), which gave me broad exposure to land use planning in both urban and rural contexts. I hold a BA in Sustainable Urban Development with a minor in GIS and am actively pursuing AICP certification.
+          </p>
+          <p>
+            Beyond traditional planning practice, I build web-based tools that make regulatory frameworks more accessible. I believe planning is most effective when it is transparent — when applicants can understand the rules, the timelines, and their own role in the process. That belief drives both my day-to-day practice and my side projects.
+          </p>
+        </div>
+        <div class="about-sidebar">
+          <div class="skill-group">
+            <p class="skill-group-label">Planning</p>
+            <div class="skill-chips">
+              <span class="chip">CEQA</span>
+              <span class="chip">SmartCode</span>
+              <span class="chip">Housing Law</span>
+              <span class="chip">PSA</span>
+              <span class="chip">Entitlement</span>
+              <span class="chip">EIR</span>
+              <span class="chip">Density Bonus</span>
+              <span class="chip">Form-Based Code</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <p class="skill-group-label">Technology</p>
+            <div class="skill-chips">
+              <span class="chip">ArcGIS Online</span>
+              <span class="chip">GIS</span>
+              <span class="chip">JavaScript</span>
+              <span class="chip">HTML/CSS</span>
+              <span class="chip">Python</span>
+              <span class="chip">GitHub Pages</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <p class="skill-group-label">Credentials</p>
+            <div class="skill-chips">
+              <span class="chip">AICP Candidate</span>
+              <span class="chip">BA Sustainable Urban Dev.</span>
+              <span class="chip">GIS Minor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-name">Peter Kaljian</span>
+    Planner · AICP Candidate · Petaluma, CA ·
+    <a href="mailto:PKaljian@gmail.com">PKaljian@gmail.com</a>
+  </footer>
+
+</div><!-- /portfolio -->
+
+<script>
+  // ── Gate logic ──
+  const orgInput = document.getElementById('org-input');
+  const gateBtn  = document.getElementById('gate-submit');
+  const gate     = document.getElementById('gate');
+  const portfolio= document.getElementById('portfolio');
+  const visitorBar = document.getElementById('visitor-bar');
+  const visitorOrg = document.getElementById('visitor-org');
+
+  orgInput.addEventListener('input', () => {
+    gateBtn.disabled = orgInput.value.trim().length < 2;
+  });
+
+  orgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !gateBtn.disabled) enterPortfolio();
+  });
+
+  gateBtn.addEventListener('click', enterPortfolio);
+
+  function enterPortfolio() {
+    const org = orgInput.value.trim();
+    if (!org) return;
+
+    // Log the visit (you can wire this to a backend / form service later)
+    logVisit(org);
+
+    // Show visitor bar
+    visitorOrg.textContent = org;
+    visitorBar.style.display = 'block';
+
+    // Animate out gate, animate in portfolio
+    gate.classList.add('out');
+    portfolio.classList.add('visible');
+  }
+
+  function logVisit(org) {
+    // Log to Google Form (silent background submission)
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdK7PM9K3bGXJBWQgIY4Tv3HGoEQYSSXlwFS1iaXnpovYSf1Q/formResponse';
+    const data = new FormData();
+    data.append('entry.241605371', org);
+    fetch(formUrl, { method: 'POST', mode: 'no-cors', body: data });
+
+    // Also store locally for reference
+    const visits = JSON.parse(sessionStorage.getItem('pk_visits') || '[]');
+    visits.push({ org, timestamp: new Date().toISOString(), referrer: document.referrer });
+    sessionStorage.setItem('pk_visits', JSON.stringify(visits));
+    console.info('[Portfolio Visit]', { org, timestamp: new Date().toISOString() });
+  }
+</script>
+
+</body>
+</html>
