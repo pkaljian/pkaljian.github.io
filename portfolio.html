@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peter Kaljian — Planning + Technology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1117;
+    --paper: #f5f2ec;
+    --accent: #2a5f4f;
+    --accent2: #c4501a;
+    --muted: #6b7280;
+    --rule: #d4cfc6;
+    --card-bg: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,242,236,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  .nav-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    padding: 7rem 2rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    line-height: 1.08;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+
+  .hero-body {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #3a3a3a;
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  .hero-cta:hover { background: #1e4538; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* SECTION */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* PROJECT CARDS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  }
+
+  .card-accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+
+  .card-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: #eef5f2;
+    color: var(--accent);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+  }
+  .tag.orange { background: #fdf0ea; color: var(--accent2); }
+  .tag.gray { background: #f1f1f1; color: var(--muted); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.65;
+    flex: 1;
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+  }
+
+  .card-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    transition: gap 0.2s;
+  }
+  .card-link:hover { gap: 0.7rem; }
+  .card-link svg { width: 14px; height: 14px; }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #3a3a3a;
+    font-weight: 300;
+  }
+  .about-body p + p { margin-top: 1rem; }
+
+  .about-sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .skill-group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .skill-chips {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .chip {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.75rem;
+    color: #333;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: #8a8a8a;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.82rem;
+    font-weight: 300;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer .footer-name {
+    font-family: 'DM Serif Display', serif;
+    color: #f5f2ec;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── FEEDBACK POPUP ── */
+  #feedback-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 17, 23, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  #feedback-overlay.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #feedback-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    max-width: 480px;
+    width: calc(100% - 2rem);
+    padding: 2rem;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    transform: translateY(24px);
+    transition: transform 0.4s ease;
+    position: relative;
+  }
+  #feedback-overlay.visible #feedback-card {
+    transform: translateY(0);
+  }
+
+  .fb-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 1.2rem; line-height: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .fb-close:hover { color: var(--ink); background: #f1efea; }
+
+  .fb-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .fb-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+
+  .fb-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  /* Reaction row */
+  .fb-reaction-row {
+    display: flex; gap: 0.6rem; margin-bottom: 1.4rem;
+  }
+  .fb-reaction {
+    flex: 1;
+    background: #f7f5f1;
+    border: 1.5px solid var(--rule);
+    border-radius: 8px;
+    padding: 0.7rem 0.4rem;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.4rem;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    line-height: 1;
+  }
+  .fb-reaction span {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+  }
+  .fb-reaction:hover { border-color: var(--accent); background: #eef5f2; transform: translateY(-2px); }
+  .fb-reaction.selected { border-color: var(--accent); background: #eef5f2; }
+
+  .fb-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .fb-textarea {
+    width: 100%;
+    background: #f7f5f1;
+    border: 1.5px solid var(--rule);
+    border-radius: 6px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--ink);
+    padding: 0.75rem 1rem;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1rem;
+  }
+  .fb-textarea:focus { border-color: var(--accent); }
+  .fb-textarea::placeholder { color: #aaa; }
+
+  .fb-actions {
+    display: flex; gap: 0.75rem; align-items: center;
+  }
+
+  .fb-btn-primary {
+    flex: 1;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.75rem 1.2rem;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s;
+  }
+  .fb-btn-primary:hover { background: #1e4538; }
+
+  .fb-btn-connect {
+    flex: 1;
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.75rem 1.2rem;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .fb-btn-connect:hover { background: var(--accent); color: #fff; }
+
+  .fb-skip {
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .fb-skip:hover { color: var(--ink); }
+
+  /* Success state */
+  .fb-success {
+    text-align: center;
+    padding: 1rem 0 0.5rem;
+    display: none;
+  }
+  .fb-success-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+  }
+  .fb-success h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+  .fb-success p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* Progress ring */
+  #fb-timer-ring {
+    position: absolute;
+    top: 1rem; right: 3.2rem;
+    width: 22px; height: 22px;
+    opacity: 0.4;
+  }
+  #fb-timer-ring circle {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 56.5;
+    stroke-dashoffset: 56.5;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 4rem 1.5rem 3rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 1.5rem; }
+    .nav-links { display: none; }
+    #feedback-overlay { align-items: flex-end; padding-bottom: 0; }
+    #feedback-card { border-radius: 12px 12px 0 0; }
+  }
+</style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-name">Peter Kaljian</a>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="mailto:PKaljian@gmail.com">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Planner · AICP Candidate · Sonoma County, CA</p>
+      <h1 class="hero-title">Planning at the<br>intersection of<br><em>code</em> and code.</h1>
+      <p class="hero-body">
+        I am a consulting planner with a focus on California land use, CEQA, Subdivision law, and multi-modal mobility connections. I also build digital tools that make complex regulatory frameworks accessible — to applicants, staff, and the public.
+      </p>
+      <a href="mailto:PKaljian@gmail.com" class="hero-cta">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+        Get in touch
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">6+</div>
+        <div class="stat-label">Public tools deployed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3+</div>
+        <div class="stat-label">Years in California municipal &amp; consulting planning practice</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4+</div>
+        <div class="stat-label">Municipalities served as consulting planner</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">AICP</div>
+        <div class="stat-label">Candidate in progress</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="projects">
+    <div class="section-header">
+      <h2 class="section-title">Tools &amp; Projects</h2>
+      <span class="section-count">06 ITEMS</span>
+    </div>
+
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">GIS</span>
+            <span class="tag">Customer Service</span>
+            <span class="tag orange">Zoning</span>
+          </div>
+          <h3 class="card-title">Petaluma Zoning Lookup Tool</h3>
+          <p class="card-desc">
+            An interactive lookup tool that answers common zoning questions for residents and applicants, integrated with an ArcGIS Online map. Designed to reduce counter-level calls by providing clear definitions and spatial context without requiring planning staff intervention.
+          </p>
+          <a href="https://pkaljian.github.io/zoning-lookup-tool/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">Active Use</span>
+            <span class="tag orange">Lot Coverage</span>
+            <span class="tag">Hercules</span>
+          </div>
+          <h3 class="card-title">Hercules Lot Coverage Calculator</h3>
+          <p class="card-desc">
+            A calculator that helps applicants interpret the maximum lot coverage section of Hercules's zoning code — a notoriously complex provision. This tool is actively in use by the City of Hercules to support applicant self-service and reduce staff time spent on routine coverage calculations.
+          </p>
+          <a href="https://pkaljian.github.io/hercules-paving-calculator/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">CEQA</span>
+            <span class="tag orange">PSA</span>
+            <span class="tag">Timelines</span>
+          </div>
+          <h3 class="card-title">California PSA / CEQA Timeline Tool</h3>
+          <p class="card-desc">
+            An interactive timeline tool that maps the full permitting lifecycle under the California Permit Streamlining Act and CEQA. Clearly delineates which party — applicant or agency — is responsible at each stage, helping applicants understand their rights and obligations and reducing procedural disputes.
+          </p>
+          <a href="https://pkaljian.github.io/california-psa-timeline-tool/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag orange">SmartCode</span>
+            <span class="tag">Petaluma</span>
+            <span class="tag">Entitlement</span>
+          </div>
+          <h3 class="card-title">Petaluma Permitting Pathway Tool</h3>
+          <p class="card-desc">
+            An applicant-facing decision tree that guides users through Petaluma's permitting pathways under its SmartCode. Helps applicants determine whether their project is by-right, ministerially approved, or subject to discretionary review — reducing uncertainty at the earliest stage of the entitlement process.
+          </p>
+          <a href="https://pkaljian.github.io/Petaluma-Permitting-Pathway/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag gray">AI-Assisted</span>
+            <span class="tag">Staff Tool</span>
+            <span class="tag orange">Correspondence</span>
+          </div>
+          <h3 class="card-title">LetterGPT — Planning Letter Drafting Assistant</h3>
+          <p class="card-desc">
+            A staff-facing tool that accelerates planning letter drafting by gathering project-specific information through a structured interview, then assembling a professional prompt for use with any AI assistant. Multiple human review checkpoints ensure professional judgment and code interpretation remain in the planner's hands throughout the process.
+          </p>
+          <a href="https://pkaljian.github.io/LetterGPT/" target="_blank" class="card-link">
+            View tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-tags">
+            <span class="tag">GIS / AGOL</span>
+            <span class="tag orange">EIR</span>
+            <span class="tag">300 MW BESS</span>
+          </div>
+          <h3 class="card-title">Borealis BESS Project Web App</h3>
+          <p class="card-desc">
+            A public stakeholder web application built in ArcGIS Online to support a complex 300 MW battery energy storage facility in unincorporated Sonoma County — a project requiring tribal coordination and a full Environmental Impact Report. The app helps stakeholders understand the project's spatial context, scope, and environmental setting, supporting informed public participation.
+          </p>
+          <a href="https://uwt-gis-geotech.maps.arcgis.com/apps/instant/basic/index.html?appid=d8b31efa5bcb416292f942e62678bfd7" target="_blank" class="card-link">
+            View app <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="about" style="background: var(--card-bg); max-width: 100%; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 4rem 2rem;">
+      <div class="section-header">
+        <h2 class="section-title">About</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-body">
+          <p>
+            I am a Planner at M-Group, where I serve as Consulting Planner to the City of Petaluma and support additional municipal clients. My work spans day-to-day zoning administration, state housing law implementation, CEQA compliance, and discretionary project entitlement.
+          </p>
+          <p>
+            Prior to M-Group, I worked at Permit Sonoma (Sonoma County), which gave me broad exposure to land use planning in both urban and rural contexts. I hold a BA in Sustainable Urban Development with a minor in GIS and am actively pursuing AICP certification.
+          </p>
+          <p>
+            Beyond traditional planning practice, I build web-based tools that make regulatory frameworks more accessible. I believe planning is most effective when it is transparent — when applicants can understand the rules, the timelines, and their own role in the process. That belief drives both my day-to-day practice and my side projects.
+          </p>
+        </div>
+        <div class="about-sidebar">
+          <div class="skill-group">
+            <p class="skill-group-label">Planning</p>
+            <div class="skill-chips">
+              <span class="chip">CEQA</span>
+              <span class="chip">SmartCode</span>
+              <span class="chip">Housing Law</span>
+              <span class="chip">PSA</span>
+              <span class="chip">Entitlement</span>
+              <span class="chip">EIR</span>
+              <span class="chip">Density Bonus</span>
+              <span class="chip">Form-Based Code</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <p class="skill-group-label">Technology</p>
+            <div class="skill-chips">
+              <span class="chip">ArcGIS Online</span>
+              <span class="chip">GIS</span>
+              <span class="chip">JavaScript</span>
+              <span class="chip">HTML/CSS</span>
+              <span class="chip">Python</span>
+              <span class="chip">GitHub Pages</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <p class="skill-group-label">Credentials</p>
+            <div class="skill-chips">
+              <span class="chip">AICP Candidate</span>
+              <span class="chip">BA Sustainable Urban Dev.</span>
+              <span class="chip">GIS Minor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-name">Peter Kaljian</span>
+    Planner · AICP Candidate · Petaluma, CA ·
+    <a href="mailto:PKaljian@gmail.com">PKaljian@gmail.com</a>
+  </footer>
+
+<!-- ── FEEDBACK POPUP ── -->
+<div id="feedback-overlay" role="dialog" aria-modal="true" aria-label="Quick feedback">
+  <div id="feedback-card">
+
+    <!-- Timer ring (visual only) -->
+    <svg id="fb-timer-ring" viewBox="0 0 22 22" aria-hidden="true">
+      <circle cx="11" cy="11" r="9" id="fb-ring-circle"/>
+    </svg>
+
+    <button class="fb-close" id="fb-close" aria-label="Close feedback">✕</button>
+
+    <!-- Main form -->
+    <div id="fb-form-content">
+      <p class="fb-eyebrow">Quick question</p>
+      <h2 class="fb-title">What do you think?</h2>
+      <p class="fb-sub">You've been here a minute — curious if anything caught your eye, or if there's something you'd expect to see that's missing.</p>
+
+      <div class="fb-reaction-row" id="fb-reactions">
+        <button class="fb-reaction" data-val="👍" aria-label="Looks good">
+          👍<span>Looks good</span>
+        </button>
+        <button class="fb-reaction" data-val="💼" aria-label="Let's talk">
+          💼<span>Let's talk</span>
+        </button>
+        <button class="fb-reaction" data-val="👀" aria-label="Just browsing">
+          👀<span>Just browsing</span>
+        </button>
+      </div>
+
+      <label class="fb-label" for="fb-text">Anything you'd like to share, or skills you'd like to know more about? (optional)</label>
+      <textarea
+        id="fb-text"
+        class="fb-textarea"
+        placeholder="e.g. 'Tell me more about your CEQA work' or 'We're hiring for X…'"
+        rows="3"
+      ></textarea>
+
+      <div class="fb-actions">
+        <button class="fb-btn-primary" id="fb-submit">Send feedback</button>
+        <a href="mailto:PKaljian@gmail.com?subject=Let's Connect — Portfolio Visit" class="fb-btn-connect">Connect →</a>
+        <button class="fb-skip" id="fb-skip">Skip</button>
+      </div>
+    </div>
+
+    <!-- Success state -->
+    <div class="fb-success" id="fb-success">
+      <div class="fb-success-icon">✅</div>
+      <h3>Thanks for the note.</h3>
+      <p>Feedback received. Feel free to reach out directly at <a href="mailto:PKaljian@gmail.com" style="color:var(--accent)">PKaljian@gmail.com</a> anytime.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── Feedback popup logic ──
+  const overlay   = document.getElementById('feedback-overlay');
+  const closeBtn  = document.getElementById('fb-close');
+  const skipBtn   = document.getElementById('fb-skip');
+  const submitBtn = document.getElementById('fb-submit');
+  const formContent = document.getElementById('fb-form-content');
+  const successEl = document.getElementById('fb-success');
+  const ringCircle = document.getElementById('fb-ring-circle');
+
+  let selectedReaction = null;
+  const DELAY_MS = 60000; // 60 seconds
+
+  // Reaction buttons
+  document.querySelectorAll('.fb-reaction').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.fb-reaction').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedReaction = btn.dataset.val;
+    });
+  });
+
+  function showPopup() {
+    overlay.classList.add('visible');
+    // Animate ring from full to empty over 30s as a subtle "fading timer" hint
+    requestAnimationFrame(() => {
+      ringCircle.style.strokeDashoffset = '0';
+    });
+  }
+
+  function hidePopup() {
+    overlay.classList.remove('visible');
+  }
+
+  closeBtn.addEventListener('click', hidePopup);
+  skipBtn.addEventListener('click', hidePopup);
+
+  // Close on backdrop click
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) hidePopup();
+  });
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hidePopup();
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const text = document.getElementById('fb-text').value.trim();
+    const reaction = selectedReaction || '(no reaction)';
+
+    // Submit to Google Form silently
+    const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdK7PM9K3bGXJBWQgIY4Tv3HGoEQYSSXlwFS1iaXnpovYSf1Q/formResponse';
+    const data = new FormData();
+    data.append('entry.241605371', `[FEEDBACK] Reaction: ${reaction} | Note: ${text || '(none)'}`);
+    fetch(formUrl, { method: 'POST', mode: 'no-cors', body: data }).catch(() => {});
+
+    // Log locally
+    console.info('[Portfolio Feedback]', { reaction, text, timestamp: new Date().toISOString() });
+
+    // Show success
+    formContent.style.display = 'none';
+    successEl.style.display = 'block';
+    setTimeout(hidePopup, 4000);
+  });
+
+  // Trigger after 60s — but only once per session
+  if (!sessionStorage.getItem('pk_feedback_shown')) {
+    setTimeout(() => {
+      sessionStorage.setItem('pk_feedback_shown', '1');
+      showPopup();
+    }, DELAY_MS);
+  }
+</script>
+
+</body>
+</html>
